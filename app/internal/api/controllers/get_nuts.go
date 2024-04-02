@@ -10,8 +10,11 @@ import (
 
 func GetNuts(w http.ResponseWriter, r *http.Request) {
 
-    // random number between 1 - 62
-    random_number := rand.Intn(62) + 1
+
+    nut_count := models.GetNutCount()
+
+    // random number between 1 - nut_count 
+    random_number := rand.Intn(nut_count) + 1
 
     // get nut data where id is equal to random_number
     nut_data := models.GetNutByID(random_number)

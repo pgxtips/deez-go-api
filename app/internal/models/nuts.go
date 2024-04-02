@@ -59,3 +59,21 @@ func GetNutByID(id int) Nut {
 
     return result_nut
 }
+
+func GetNutCount() int{
+
+    db := database.GetInstance()
+    defer db.Close()
+
+    count := 0
+
+    query1 := "SELECT COUNT(*) FROM nuts.deez_nuts_jokes;"
+    err := db.Get(&count, query1)
+
+    if err != nil {
+        fmt.Println(err)
+        return 0
+    }
+
+    return count 
+}
