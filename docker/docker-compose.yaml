@@ -1,0 +1,21 @@
+version: "3.4"
+
+services:
+  deez-go-nuts:
+    container_name: deez-go-nuts 
+    image: deez-go-nuts:latest
+    build:
+      dockerfile: ./docker/Dockerfile
+      context: ../
+    env_file:
+      - ../app/.env
+    ports:
+      - 6969:80
+    networks:
+      - app
+
+networks:
+  app:
+
+volumes:
+  build:

@@ -15,6 +15,7 @@ func ConfigInit(){
         log.Fatal("Error loading .env file")
     }
 
+    os.Setenv("APP_PORT", os.Getenv("APP_PORT"))
     os.Setenv("DB_HOST", os.Getenv("DB_HOST"))
     os.Setenv("DB_PORT", os.Getenv("DB_PORT"))
     os.Setenv("DB_NAME", os.Getenv("DB_NAME"))
