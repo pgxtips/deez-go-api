@@ -1,28 +1,61 @@
 package models
 
+import (
+    "fmt"
+    "deez-go-api/internal/db"
+)
+
+
+// public nut
 type Nut struct {
-    ID int `json:"id"`
-    Nut string `json:"nut"`
+    ID int `json:"id" db:"id"`
+    Nut string `json:"nut" db:"joke"`
 }
 
 func GetAllNuts() []Nut{
-    return []Nut{
-        {ID: 0, Nut: "deez nuts get em 0"},
-        {ID: 1, Nut: "deez nuts get em 1"},
-        {ID: 2, Nut: "deez nuts get em 2"},
-        {ID: 3, Nut: "deez nuts get em 3"},
-        {ID: 4, Nut: "deez nuts get em 4"},
-        {ID: 5, Nut: "deez nuts get em 5"},
-        {ID: 6, Nut: "deez nuts get em 6"},
+    
+    db := database.GetInstance()
+    defer db.Close()
+
+    query1 := "SELECT * FROM nuts.deez_nuts_jokes;"
+    rows, err := db.Query(query1)
+
+    if err != nil {
+        fmt.Println(err)
     }
+
+    defer rows.Close()
+
+
+    db_nuts := []Nut{}
+
+    for rows.Next() {
+        var n Nut 
+
+        if err := rows.Scan(&n.ID, &n.Nut); err != nil {
+            fmt.Println(err)
+        }
+
+        db_nuts = append(db_nuts, n)
+    }
+
+    return db_nuts
 }
 
 func GetNutByID(id int) Nut {
-    all_nuts := GetAllNuts()
-    for _, nut := range all_nuts {
-        if nut.ID == id {
-            return nut
-        }
+
+    db := database.GetInstance()
+    defer db.Close()
+
+    result_nut := Nut{}
+
+    query1 := "SELECT * FROM nuts.deez_nuts_jokes WHERE id = $1 LIMIT 1;"
+    err := db.Get(&result_nut, query1, id)
+
+    if err != nil {
+        fmt.Println(err)
+        return Nut{}
     }
-    return Nut{}
+
+    return result_nut
 }
