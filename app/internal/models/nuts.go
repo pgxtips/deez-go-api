@@ -1,7 +1,7 @@
 package models
 
 import (
-    "fmt"
+    "log"
     "math/rand"
     "deez-go-api/internal/db"
 )
@@ -22,7 +22,7 @@ func GetAllNuts() ([]Nut, error){
     rows, err := db.Query(query1)
 
     if err != nil {
-        fmt.Println(err)
+        log.Println(err)
         return nil, err
     }
 
@@ -35,7 +35,7 @@ func GetAllNuts() ([]Nut, error){
         var n Nut 
 
         if err := rows.Scan(&n.ID, &n.Nut); err != nil {
-            fmt.Println(err)
+            log.Println(err)
             return nil, err
         }
 
@@ -56,7 +56,7 @@ func GetNutByID(id int) (Nut, error) {
     err := db.Get(&result_nut, query1, id)
 
     if err != nil {
-        fmt.Println(err)
+        log.Println(err)
         return Nut{}, err
     }
 
@@ -74,7 +74,7 @@ func GetNutCount() (int, error){
     err := db.Get(&count, query1)
 
     if err != nil {
-        fmt.Println(err)
+        log.Println(err)
         return 0, err
     }
 

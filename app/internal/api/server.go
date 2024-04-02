@@ -1,13 +1,13 @@
 package api 
 
 import (
-    "fmt"
+    "log"
     "net/http"
     "deez-go-api/internal/api/routes"
 )
 
 func ServerStart() {
-    fmt.Println("starting server on port 8080...")
+    log.Println("starting server on port 8080...")
 
     router := http.NewServeMux()
     routes.RegisterNutRoutes(router)
@@ -15,6 +15,6 @@ func ServerStart() {
 
     
     if err := http.ListenAndServe(":8080", router); err != nil {
-        fmt.Println(err)
+        log.Println(err)
     }
 }
