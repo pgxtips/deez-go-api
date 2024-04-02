@@ -4,20 +4,18 @@ import (
     "fmt"
     "net/http"
     "encoding/json"
-    "math/rand"
     "deez-go-api/internal/models"
 )
 
-func GetNuts(w http.ResponseWriter, r *http.Request) {
+func GetNutsHandler(w http.ResponseWriter, r *http.Request) {
 
+    nut_data, nut_err := models.GetRandomNut()
 
-    nut_count := models.GetNutCount()
-
-    // random number between 1 - nut_count 
-    random_number := rand.Intn(nut_count) + 1
-
-    // get nut data where id is equal to random_number
-    nut_data := models.GetNutByID(random_number)
+    if nut_err != nil {
+        fmt.Println(nut_err)
+        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+        return
+    }
 
     w.Header().Set("Content-Type", "application/json")
     err := json.NewEncoder(w).Encode(nut_data) 
@@ -29,5 +27,4 @@ func GetNuts(w http.ResponseWriter, r *http.Request) {
         http.Error(w, "Internal Server Error", http.StatusInternalServerError)
         return
     }
-
 }

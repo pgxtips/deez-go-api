@@ -9,5 +9,5 @@ import (
 
 func RegisterNutRoutes(router *http.ServeMux) {
     fmt.Println("registering nut routes...")
-    router.HandleFunc("/nuts", controllers.GetNuts)
+    router.HandleFunc("/nuts", controllers.GetNutsHandler)
 } 

@@ -2,6 +2,7 @@ package models
 
 import (
     "fmt"
+    "math/rand"
     "deez-go-api/internal/db"
 )
 
@@ -12,7 +13,7 @@ type Nut struct {
     Nut string `json:"nut" db:"joke"`
 }
 
-func GetAllNuts() []Nut{
+func GetAllNuts() ([]Nut, error){
     
     db := database.GetInstance()
     defer db.Close()
@@ -22,6 +23,7 @@ func GetAllNuts() []Nut{
 
     if err != nil {
         fmt.Println(err)
+        return nil, err
     }
 
     defer rows.Close()
@@ -34,15 +36,16 @@ func GetAllNuts() []Nut{
 
         if err := rows.Scan(&n.ID, &n.Nut); err != nil {
             fmt.Println(err)
+            return nil, err
         }
 
         db_nuts = append(db_nuts, n)
     }
 
-    return db_nuts
+    return db_nuts, nil
 }
 
-func GetNutByID(id int) Nut {
+func GetNutByID(id int) (Nut, error) {
 
     db := database.GetInstance()
     defer db.Close()
@@ -54,13 +57,13 @@ func GetNutByID(id int) Nut {
 
     if err != nil {
         fmt.Println(err)
-        return Nut{}
+        return Nut{}, err
     }
 
-    return result_nut
+    return result_nut, nil
 }
 
-func GetNutCount() int{
+func GetNutCount() (int, error){
 
     db := database.GetInstance()
     defer db.Close()
@@ -72,8 +75,19 @@ func GetNutCount() int{
 
     if err != nil {
         fmt.Println(err)
-        return 0
+        return 0, err
     }
 
-    return count 
+    return count, nil
+}
+
+func GetRandomNut() (Nut, error) {
+
+    nut_count, err := GetNutCount()
+    if err != nil { return Nut{}, err }
+
+    nut_data, err := GetNutByID(rand.Intn(nut_count) + 1)
+    if err != nil { return Nut{}, err }
+
+    return nut_data, nil
 }
